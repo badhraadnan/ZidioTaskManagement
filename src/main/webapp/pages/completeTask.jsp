@@ -67,9 +67,9 @@
     <div class="container-fluid">
         <div class="row">
             <nav class="col-md-2 sidebar d-flex flex-column">
-                <a href="addTask.jsp" class="nav-link mb-3" >➕ Add Task</a>
-                <a href="getdetails.jsp" class="nav-link mb-3">📋 Pending Tasks</a>
-                <a href="completeTask.jsp" class="nav-link mb-3">✅ Completed Tasks</a>
+                <a href="addTask.jsp" class="nav-link mb-3 fs-5" >➕ Add Task</a>
+                <a href="getdetails.jsp" class="nav-link mb-3 fs-5">📋 Pending Tasks</a>
+                <a href="completeTask.jsp" class="nav-link mb-3 fs-5">✅ Completed Tasks</a>
                 
             </nav>
             <main class="col-md-9 p-4">

@@ -1,6 +1,9 @@
 <%@page import="com.TaskManagement.Model.DAOServiceImpl"%>
 <%@page import="com.TaskManagement.Model.DAOService"%>
 <%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.*"%>
+<%@page import="java.time.*"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
   
@@ -22,8 +25,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX+3pBnMFcV7oQPJkl9QevSCWr3W6A==" 
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        
-
+  
+  
 </head>
 <body>
 
@@ -71,13 +74,13 @@
            
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active text-white" href="pages/addTask.jsp">➕ Add Task</a>
+                    <a class="nav-link active text-white fs-5" href="pages/addTask.jsp">➕ Add Task</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="pages/getdetails.jsp">📋 Pending Tasks</a>
+                    <a class="nav-link text-white fs-5" href="pages/getdetails.jsp">📋 Pending Tasks</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="pages/completeTask.jsp">✅ Completed Tasks</a>
+                    <a class="nav-link text-white fs-5" href="pages/completeTask.jsp">✅ Completed Tasks</a>
                 </li>
                 
             </ul>
@@ -91,13 +94,67 @@
             <span class="text-dark text-decoration-underline">TaskManagement</span>
             
             </h1>
-            
+            <%
+   
+    Integer userId = (Integer) session.getAttribute("userId");
+    
+    LocalDate currDate = LocalDate.now();  // Current Date
+    LocalTime currTime = LocalTime.now();  // Current Time
+    
+    StringBuilder overdueTasks = new StringBuilder(); // Store overdue tasks
+
+    if (userId != null) {
+        Connection cn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todoapp", "root", "Adnan");
+
+            // Get all pending tasks for the user
+            String query = "SELECT title, due_time, end_date FROM task WHERE uid = ? AND status = ?";
+            ps = cn.prepareStatement(query);
+            ps.setInt(1, userId);
+            ps.setString(2, "InProgress");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String endDateStr = rs.getString("end_date");
+                String dueTimeStr = rs.getString("due_time") != null ? rs.getString("due_time") : "23:59";
+
+                LocalDate endDate = LocalDate.parse(endDateStr);
+                LocalTime dueTime = LocalTime.parse(dueTimeStr, DateTimeFormatter.ofPattern("HH:mm"));
+
+                // Check if the task is overdue
+                if (endDate.isBefore(currDate) || (endDate.isEqual(currDate) && currTime.isAfter(dueTime))) {
+                    overdueTasks.append("Task '").append(title).append("' is overdue!\\n");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (cn != null) cn.close();
+        }
+    }
+%>
         </main>
     </div>
 </div>
 
  <%@ include file="../HTML/footer.html" %>
   
+  <script>
+    
+    
+    let overdueTasks = "<%= overdueTasks.toString() %>";
+    if (overdueTasks.trim() !== "") {
+        alert(overdueTasks);
+    }
+</script>
 	
 </body>
 </html>

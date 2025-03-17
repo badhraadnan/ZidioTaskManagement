@@ -20,24 +20,53 @@
 <head>
 <meta charset="UTF-8">
 <title>Task Management</title>
-
-<!-- Bootstrap CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <!-- FontAwesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX+3pBnMFcV7oQPJkl9QevSCWr3W6A==" 
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <link rel="stylesheet" href="Task_Style.css">
-     
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .message-container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .btn-container {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body class="bg-light " style="padding-top: 56px;">
 	
 	<%
 	LocalTime currtime=LocalTime.now();
-	String formatedTime=currtime.format(DateTimeFormatter.ofPattern("HH:mm"));
+	String formatedTime=currtime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 	%>
 	
 <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
@@ -81,13 +110,13 @@
             <ul class="nav flex-column">
           
                 <li class="nav-item">
-                    <a class="nav-link active text-white fs-5" href="addTask.jsp">➕ Add Task</a>
+                    <a class="nav-link active text-white" href="addTask.jsp">➕ Add Task</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white fs-5" href="getdetails.jsp">📋 Pending Tasks</a>
+                    <a class="nav-link text-white" href="getdetails.jsp">📋 Pending Tasks</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white fs-5" href="completeTask.jsp">✅ Completed Tasks</a>
+                    <a class="nav-link text-white" href="completeTask.jsp">✅ Completed Tasks</a>
                 </li>
                 
             </ul>
@@ -97,59 +126,35 @@
         <main class="col-md-9 p-4 bg-light">
             
             
-            
-       <div style="margin-top: 30px; ">
-	
-	
-	<div style="display: flex; align-items: center; justify-content: center;">
-	
-	<form action="saveTask" method="post">
-	<h1  class="text-center text-danger text-decoration-underline mb-5">
-            <span class="text-primary">A</span><span class="text-info fw-bold">d</span><span class="text-secondary fw-bold">d</span>
-            <span class="text-danger fw-bold">T</span><span class="text-warning fw-bold">a</span><span class="text-success fw-bold">s</span><span class="text-primary fw-bold">k</span>
-            
-      
-            </h1>
-	<input type="text" name="title" placeholder="Enter Title.." required>
-	<input type="hidden" value="<%= formatedTime %>" name="time" >
-	<input type="hidden" value="<%= LocalDate.now() %>" name="date">
-	Task Due-Date :<p class="fs-5">
-    <input type="date" class="mt-1 mb-1 border border-primary rounded-3 p-2" name="end_date" required>
-	</p>
+       <div class="message-container bg-white">
+        <!-- Success Message -->
+        <div id="successMsg" class="success-message" style="display: none;">
+            <i class="fas fa-check-circle"></i> Task Added Successfully!
+        </div>
 
-	Task Due-Time :<p class="fs-5">
-    <input type="time" class="mt-1 mb-1 border border-primary rounded-3 p-2" name="due_time" required>
-	</p>
+        <!-- Error Message -->
+        <div id="errorMsg" class="error-message" style="display: none;">
+            <i class="fas fa-times-circle"></i> Something went wrong. Please try again!
+        </div>
 
-	<input type="hidden" class="ml-3" name="uid" value="<%= (userId != -1) ? userId : ""  %>">
-	<input type="hidden" name="status" value="InProgress">
-	
-	
-	<input type="submit" value="add">
-	
-	
-	
-	<input type="hidden" value="
-	<%
-	if(request.getAttribute("error")!=null){
-		out.println(request.getAttribute("error"));
-	}
-	else{
-		out.println(request.getAttribute("success"));
-		
-		
-	}
-	
-	%>
-	
-     ">
-     
-    
+        <div class="btn-container">
+            <a href="../pages/addTask.jsp" class="btn btn-primary">➕ Add Another Task</a>
+            <a href="../pages/getdetails.jsp" class="btn btn-success">📋 View Tasks</a>
+        </div>
+    </div>
 
-     
-     </form>
-	</div>
-	</div>       
+    <script>
+        // Get query parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const result = urlParams.get('success');
+
+        if (result === '1') {
+            document.getElementById("successMsg").style.display = "block";
+        } else {
+            document.getElementById("errorMsg").style.display = "block";
+        }
+    </script>     
+          
         </main>
     </div>
 </div>

@@ -21,11 +21,18 @@
         ps.setInt(1, tid);
         int rows = ps.executeUpdate();
         
+        
         if (rows > 0) {
-            response.sendRedirect("getdetails.jsp");
+        %>
+            <script type="text/javascript">
+                alert("Task Deleted Successfully...");
+                window.location.href = "getdetails.jsp"; // Redirect after alert
+            </script>
+        <%
         } else {
             out.println("Error: Task not deleted.");
         }
+       
     } catch (Exception e) {
         e.printStackTrace();
     } finally {
