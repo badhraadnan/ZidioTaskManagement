@@ -113,7 +113,7 @@
             cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todoapp", "root", "Adnan");
 
             // Get all pending tasks for the user
-            String query = "SELECT title, due_time, end_date FROM task WHERE uid = ? AND status = ?";
+            String query = "SELECT title, end_date FROM task WHERE uid = ? AND status = ?";
             ps = cn.prepareStatement(query);
             ps.setInt(1, userId);
             ps.setString(2, "InProgress");
@@ -121,14 +121,12 @@
 
             while (rs.next()) {
                 String title = rs.getString("title");
-                String endDateStr = rs.getString("end_date");
-                String dueTimeStr = rs.getString("due_time") != null ? rs.getString("due_time") : "23:59";
+                String endDateStr = rs.getString("end_date");               
 
-                LocalDate endDate = LocalDate.parse(endDateStr);
-                LocalTime dueTime = LocalTime.parse(dueTimeStr, DateTimeFormatter.ofPattern("HH:mm"));
+                LocalDate endDate = LocalDate.parse(endDateStr);               
 
                 // Check if the task is overdue
-                if (endDate.isBefore(currDate) || (endDate.isEqual(currDate) && currTime.isAfter(dueTime))) {
+                if (  (endDate.isEqual(currDate) || endDate.isAfter(currDate))) {
                     overdueTasks.append("Task '").append(title).append("' is overdue!\\n");
                 }
             }

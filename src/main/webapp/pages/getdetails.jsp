@@ -77,8 +77,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Title</th>
-                                    <th>Status</th>
-                                    <th>Due Time</th>
+                                    <th>Status</th>                                    
                                     <th>End Date</th>
                                     <th>Delete</th>
                                     <th>Complete</th>
@@ -92,7 +91,7 @@
                                 try {
                                     Class.forName("com.mysql.cj.jdbc.Driver");
                                     cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todoapp", "root", "Adnan");
-                                    ps = cn.prepareStatement("SELECT tid, title, status, due_time, end_date FROM task WHERE uid = ? AND status = ?");
+                                    ps = cn.prepareStatement("SELECT tid, title, status, end_date FROM task WHERE uid = ? AND status = ?");
                                     ps.setInt(1, userId);
                                     ps.setString(2, "InProgress");
                                     rs = ps.executeQuery();
@@ -103,9 +102,7 @@
                                         String endDateStr = rs.getString("end_date");
                                         LocalDate endDate = LocalDate.parse(endDateStr); // Convert to LocalDate
 
-                                        // Retrieve due_time and convert to LocalTime
-                                        String dueTimeStr = rs.getString("due_time") != null ? rs.getString("due_time") : "23:59";
-                                        LocalTime dueTime = LocalTime.parse(dueTimeStr, DateTimeFormatter.ofPattern("HH:mm"));
+                                       
                                         
                                        
 
@@ -113,8 +110,7 @@
                                 <tr>
                                     <td><%= count++ %></td>
                                     <td><%= title %></td>                                    
-                                    <td><%= rs.getString("status") %></td>
-                                    <td><%= dueTimeStr %></td>
+                                    <td><%= rs.getString("status") %></td>                                   
                                     <td><%= endDateStr %></td>
                                     <td><a href="deleteTask.jsp?tid=<%= rs.getInt("tid") %>" class="text-danger"><i class="fas fa-trash"></i></a></td>
                                     <td><a href="updateTask.jsp?tid=<%= rs.getInt("tid") %>" class="text-success"><i class="fas fa-check"></i></a></td>
@@ -122,10 +118,14 @@
 
                                 <% 
                                     // Check if the task's due time has been reached or passed
-                                    if (endDate.isEqual(currDate) && currTime.compareTo(dueTime) >= 0 || currTime.compareTo(dueTime) <= 0) { 
-                                        dueTasks.append("Task '").append(title).append("' is overdue!\\n");
-                                    }
-                                    }
+                                     if (  (endDate.isEqual(currDate) || endDate.isAfter(currDate))) {
+                                    	 dueTasks.append("<div style='color: red; font-weight: bold; padding: 5px; background-color: yellow;'>")
+                                         .append(endDateStr).append("<br>")
+                                         .append("Task <strong>").append(title).append("</strong> is overdue!")
+                                         .append("</div>");
+
+							            }
+                                }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 } finally {
@@ -145,13 +145,21 @@
     <%@ include file="../HTML/footer.html" %>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
     <%-- Show alert if there are due/overdue tasks --%>
     <script>
-        let dueTasks = "<%= dueTasks.toString() %>";
-        if (dueTasks.trim() !== "") {
-            alert(dueTasks);
-        }
+    let dueTasks = `<%= dueTasks.toString() %>`;
+    if (dueTasks.trim() !== "") {
+        Swal.fire({
+            title: "Overdue Task!",
+            html: dueTasks, // Allows HTML rendering
+            icon: "warning",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#d33"
+        });
+    }
+
     </script>
 </body>
 </html>

@@ -117,9 +117,7 @@
     <input type="date" class="mt-1 mb-1 border border-primary rounded-3 p-2" name="end_date" required>
 	</p>
 
-	Task Due-Time :<p class="fs-5">
-    <input type="time" class="mt-1 mb-1 border border-primary rounded-3 p-2" name="due_time" required>
-	</p>
+	
 
 	<input type="hidden" class="ml-3" name="uid" value="<%= (userId != -1) ? userId : ""  %>">
 	<input type="hidden" name="status" value="InProgress">

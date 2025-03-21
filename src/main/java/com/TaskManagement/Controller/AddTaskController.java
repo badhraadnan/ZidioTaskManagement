@@ -24,8 +24,7 @@ public class AddTaskController extends HttpServlet{
 	        throws ServletException, IOException {
 	    
 	    String title = request.getParameter("title");
-	    String tasktime = request.getParameter("time");
-	    String duetime = request.getParameter("due_time");
+	    String tasktime = request.getParameter("time");	    
 	    String taskDate = request.getParameter("date");
 	    String endDate = request.getParameter("end_date");
 	    String userId = request.getParameter("uid");
@@ -34,7 +33,7 @@ public class AddTaskController extends HttpServlet{
 	    DAOService service = new DAOServiceImpl();
 	    service.DBconnect();
 
-	    int result = service.savetask(title, tasktime,duetime, taskDate, endDate, userId, status);
+	    int result = service.savetask(title, tasktime, taskDate, endDate, userId, status);
 
 	    // Fetch expired tasks
 	    
