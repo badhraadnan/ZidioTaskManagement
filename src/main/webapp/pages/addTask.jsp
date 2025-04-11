@@ -98,56 +98,52 @@
             
             
             
-       <div style="margin-top: 30px; ">
-	
-	
-	<div style="display: flex; align-items: center; justify-content: center;">
-	
-	<form action="saveTask" method="post">
-	<h1  class="text-center text-danger text-decoration-underline mb-5">
-            <span class="text-primary">A</span><span class="text-info fw-bold">d</span><span class="text-secondary fw-bold">d</span>
-            <span class="text-danger fw-bold">T</span><span class="text-warning fw-bold">a</span><span class="text-success fw-bold">s</span><span class="text-primary fw-bold">k</span>
-            
-      
+       <div style="margin-top: 30px;">
+    <div style="display: flex; align-items: center; justify-content: center;">
+        <form action="saveTask" method="post">
+            <h1 class="text-center text-danger text-decoration-underline mb-5">
+                <span class="text-primary">A</span><span class="text-info fw-bold">d</span><span class="text-secondary fw-bold">d</span>
+                <span class="text-danger fw-bold">T</span><span class="text-warning fw-bold">a</span><span class="text-success fw-bold">s</span><span class="text-primary fw-bold">k</span>
             </h1>
-	<input type="text" name="title" placeholder="Enter Title.." required>
-	<input type="hidden" value="<%= formatedTime %>" name="time" >
-	<input type="hidden" value="<%= LocalDate.now() %>" name="date">
-	Task Due-Date :<p class="fs-5">
-    <input type="date" class="mt-1 mb-1 border border-primary rounded-3 p-2" name="end_date" required>
-	</p>
 
-	
+            <input type="text" name="title" placeholder="Enter Title.." required>
+            <input type="hidden" value="<%= formatedTime %>" name="time">
+            <input type="hidden" value="<%= LocalDate.now() %>" name="date">
 
-	<input type="hidden" class="ml-3" name="uid" value="<%= (userId != -1) ? userId : ""  %>">
-	<input type="hidden" name="status" value="InProgress">
-	
-	
-	<input type="submit" value="add">
-	
-	
-	
-	<input type="hidden" value="
-	<%
-	if(request.getAttribute("error")!=null){
-		out.println(request.getAttribute("error"));
-	}
-	else{
-		out.println(request.getAttribute("success"));
-		
-		
-	}
-	
-	%>
-	
-     ">
-     
-    
+            
+<div class="d-flex justify-content-center align-items-center mb-4">
+    <div class="me-5">
+        <label class="form-label fs-5">Task Due-Date:</label><br>
+        <input type="date" class="form-control border-primary" name="end_date" required style="min-width: 200px;">
+    </div>
+    <div class="ms-3">
+        <label class="form-label fs-5">Priority:</label><br>
+        <select class="form-select border-primary" name="priority" required style="min-width: 200px;">
+            <option value="Low">-- Select Priority --</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select>
+    </div>
+</div>
 
-     
-     </form>
-	</div>
-	</div>       
+
+            <input type="hidden" name="uid" value="<%= (userId != -1) ? userId : "" %>">
+            <input type="hidden" name="status" value="InProgress">
+
+            <input type="submit" class="btn btn-success" value="Add">
+
+            <input type="hidden" value="<%
+                if(request.getAttribute("error") != null){
+                    out.println(request.getAttribute("error"));
+                } else {
+                    out.println(request.getAttribute("success"));
+                }
+            %>">
+        </form>
+    </div>
+</div>
+  
         </main>
     </div>
 </div>

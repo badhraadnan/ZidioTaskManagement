@@ -29,11 +29,12 @@ public class AddTaskController extends HttpServlet{
 	    String endDate = request.getParameter("end_date");
 	    String userId = request.getParameter("uid");
 	    String status = request.getParameter("status");
+	    String priority = request.getParameter("priority");
 
 	    DAOService service = new DAOServiceImpl();
 	    service.DBconnect();
 
-	    int result = service.savetask(title, tasktime, taskDate, endDate, userId, status);
+	    int result = service.savetask(title, tasktime, taskDate, endDate, userId, status,priority);
 
 	    // Fetch expired tasks
 	    
@@ -41,6 +42,7 @@ public class AddTaskController extends HttpServlet{
 	    if (result > 0) {
             // ✅ Redirect to success page with success message
             response.sendRedirect("success.jsp?success=1");
+            
         } else {
             // ❌ Redirect to success page with error message
             response.sendRedirect("success.jsp?success=0");

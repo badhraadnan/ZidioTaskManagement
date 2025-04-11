@@ -92,7 +92,7 @@ public class DAOServiceImpl implements DAOService {
 	}
 
 	@Override
-	public int savetask(String title,String tasktime, String taskDate, String endDate,String userId,String status) {
+	public int savetask(String title,String tasktime, String taskDate, String endDate,String userId,String status,String priority) {
 		int tid=1;
 		
 		LocalTime time=LocalTime.now();
@@ -104,7 +104,7 @@ public class DAOServiceImpl implements DAOService {
 				tid=rs.getInt("TaskId")+1;
 			}
 			
-			PreparedStatement stmt=cn.prepareStatement("insert into task values(?,?,?,?,?,?,?)");
+			PreparedStatement stmt=cn.prepareStatement("insert into task values(?,?,?,?,?,?,?,?)");
 			stmt.setInt(1, tid);
 			stmt.setString(2, title);
 			stmt.setString(3, tasktime);			
@@ -112,6 +112,7 @@ public class DAOServiceImpl implements DAOService {
 			stmt.setString(5, endDate);
 			stmt.setString(6, userId);
 			stmt.setString(7, status);
+			stmt.setString(8, priority);
 			
 			int result = stmt.executeUpdate();
 			return result;
@@ -171,6 +172,9 @@ public class DAOServiceImpl implements DAOService {
         }
         return result;
     }
+
+
+	
 
 
 	

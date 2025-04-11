@@ -7,7 +7,7 @@ public interface DAOService {
     public int verify(String name, String username, String mobile, String email, String password); // Updated
     public int logincreditial(String username, String password);
     
-    public int savetask(String title, String tasktime,String taskDate, String endDate,String userId,String status);
+    public int savetask(String title, String tasktime,String taskDate, String endDate,String userId,String status,String priority);
     public boolean adminlogin(String username,String password); // Updated
     
     ResultSet getDetails();

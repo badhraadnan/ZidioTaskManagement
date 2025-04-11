@@ -76,6 +76,7 @@
                 <li class="nav-item">
                     <a class="nav-link active text-white fs-5" href="pages/addTask.jsp">➕ Add Task</a>
                 </li>
+               
                 <li class="nav-item">
                     <a class="nav-link text-white fs-5" href="pages/getdetails.jsp">📋 Pending Tasks</a>
                 </li>
@@ -111,9 +112,9 @@
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todoapp", "root", "Adnan");
-
+           
             // Get all pending tasks for the user
-            String query = "SELECT title, end_date FROM task WHERE uid = ? AND status = ?";
+            String query = "SELECT title, end_date FROM task WHERE uid = ? AND status = ?";         
             ps = cn.prepareStatement(query);
             ps.setInt(1, userId);
             ps.setString(2, "InProgress");
@@ -138,6 +139,8 @@
             if (cn != null) cn.close();
         }
     }
+    
+    
 %>
         </main>
     </div>

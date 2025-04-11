@@ -73,52 +73,71 @@
                 
             </nav>
             <main class="col-md-9 p-4">
-                <div class="table-container mt-5 ">
-                    <h2 class="text-center text-primary mb-4">Task Details</h2>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Title</th>
-                                    <th>Status</th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% 
-                                Connection cn = null;
-                                PreparedStatement ps = null;
-                                try {
-                                    Class.forName("com.mysql.cj.jdbc.Driver");
-                                    cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todoapp", "root", "Adnan");
-                                    ps = cn.prepareStatement("SELECT tid, title, status FROM task WHERE uid = ? AND status = ?");
-                                    ps.setInt(1, userId);
-                                    ps.setString(2, "Complete");
-                                    ResultSet rs = ps.executeQuery();
-                                    int count = 1;
-                                    while (rs.next()) {
-                                %>
-                                <tr>
-                                    <td><%= count++ %></td>
-                                    <td><%= rs.getString("title") %></td>
-                                    <td><%= rs.getString("status") %></td>
-                                
-                                </tr>
-                                <% 
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                } finally {
-                                    if (cn != null) cn.close();
-                                    if (ps != null) ps.close();
-                                }
-                                %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </main>
+    <div class="table-container mt-3">
+        <h2 class="text-center text-primary mb-4">Completed Tasks by Priority</h2>
+
+        <% String[] priorities = {"High", "Medium", "Low"};
+           String[] colors = {"danger", "warning", "success"}; // Bootstrap colors
+           for (int i = 0; i < priorities.length; i++) {
+                Connection cn = null;
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todoapp", "root", "Adnan");
+                    ps = cn.prepareStatement("SELECT tid, title, status FROM task WHERE uid = ? AND status = ? AND priority = ?");
+                    ps.setInt(1, userId);
+                    ps.setString(2, "Complete");
+                    ps.setString(3, priorities[i]);
+                    rs = ps.executeQuery();
+        %>
+        <div class="card border-<%= colors[i] %> mb-4 shadow-sm">
+            <div class="card-header bg-<%= colors[i] %> text-white fs-5">
+                <i class="fas fa-flag"></i> <%= priorities[i] %> Priority Tasks
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Id</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% int count = 1;
+                           boolean hasData = false;
+                           while (rs.next()) {
+                               hasData = true;
+                        %>
+                        <tr>
+                            <td><%= count++ %></td>
+                            <td><%= rs.getString("title") %></td>
+                            <td><%= rs.getString("status") %></td>
+                        </tr>
+                        <% } 
+                           if (!hasData) { %>
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">No completed tasks in this category.</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <% 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (rs != null) rs.close();
+                    if (ps != null) ps.close();
+                    if (cn != null) cn.close();
+                }
+           } 
+        %>
+    </div>
+</main>
+
             
         </div>
     </div>
