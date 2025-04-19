@@ -200,166 +200,198 @@
 //
 //
 
-
-
 package com.TaskManagement.Model;
 
 import java.sql.*;
 
 public class DAOServiceImpl implements DAOService {
 
-    Connection cn;
-    PreparedStatement st;
+	Connection cn;
+	PreparedStatement st;
 
-    @Override
-    public void DBconnect() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todoapp", "root", "Adnan");
+	@Override
+	public void DBconnect() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todoapp", "root", "Adnan");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public int verify(String name, String username, String mobile, String email, String password) {
+		int uid = 1;
+		try {
+			PreparedStatement st = cn.prepareStatement("SELECT MAX(uid) AS max_uid FROM user");
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				uid = rs.getInt("max_uid") + 1;
+			}
+
+			PreparedStatement stmt = cn.prepareStatement(
+					"INSERT INTO user (uid, name, username, mobile, email, password) VALUES (?, ?, ?, ?, ?, ?)");
+			stmt.setInt(1, uid);
+			stmt.setString(2, name);
+			stmt.setString(3, username);
+			stmt.setString(4, mobile);
+			stmt.setString(5, email);
+			stmt.setString(6, password);
+
+			return stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public int logincreditial(String username, String password) {
+		try {
+			PreparedStatement st = cn.prepareStatement("SELECT uid FROM user WHERE username = ? AND password = ?");
+			st.setString(1, username);
+			st.setString(2, password);
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("uid");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	@Override
+	public int savetask(String title, String tasktime, String taskDate, String endDate, String userId, String status,
+			String priority) {
+		int tid = 1;
+		try {
+			PreparedStatement st = cn.prepareStatement("SELECT MAX(tid) AS TaskId FROM task");
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				tid = rs.getInt("TaskId") + 1;
+			}
+
+			PreparedStatement stmt = cn.prepareStatement("INSERT INTO task VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			stmt.setInt(1, tid);
+			stmt.setString(2, title);
+			stmt.setString(3, tasktime);
+			stmt.setString(4, taskDate);
+			stmt.setString(5, endDate);
+			stmt.setString(6, userId);
+			stmt.setString(7, status);
+			stmt.setString(8, priority);
+
+			return stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public boolean adminlogin(String username, String password) {
+		try {
+			String query = "SELECT * FROM admin WHERE username = ? AND password = ?";
+			PreparedStatement st = cn.prepareStatement(query);
+			st.setString(1, username);
+			st.setString(2, password);
+			ResultSet result = st.executeQuery();
+			return result.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public ResultSet getDetails() {
+		try {
+			String query = "SELECT * FROM task";
+			st = cn.prepareStatement(query);
+			return st.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public int saveproject(String title, String description, int created_by, String deadline, String status) {
+		int projectId = 0;
+		try {
+			// Insert project into the projects table
+			String insertProjectQuery = "INSERT INTO projects (title, description, created_by, deadline, status) VALUES (?, ?, ?, ?, ?)";
+			PreparedStatement pst = cn.prepareStatement(insertProjectQuery, Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, title);
+			pst.setString(2, description);
+			pst.setInt(3, created_by);
+			pst.setString(4, deadline);
+			pst.setString(5, status);
+
+			int rowsAffected = pst.executeUpdate();
+
+			if (rowsAffected > 0) {
+				ResultSet generatedKeys = pst.getGeneratedKeys();
+				if (generatedKeys.next()) {
+					projectId = generatedKeys.getInt(1); // Get the auto-generated project_id
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return projectId; // Return project ID
+	}
+
+	@Override
+	public int addTeamMember(int projectId, String username, String role) {
+		try {
+			String query = "INSERT INTO project_team (project_id, username, role) VALUES (?, ?, ?)";
+			PreparedStatement st = cn.prepareStatement(query);
+			st.setInt(1, projectId);
+			st.setString(2, username);
+			st.setString(3, role);
+			return st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public ResultSet getProjectDetails(String username) {
+		try {
+			// SQL query to fetch project details with team members filtered by username
+			String query = "SELECT p.title, p.description, p.created_by, p.deadline, pt.username, pt.role FROM project_team pt JOIN projects p ON pt.project_id = p.project_id WHERE pt.username = ?";
+
+			PreparedStatement st = cn.prepareStatement(query);
+			st.setString(1, username);
+
+			return st.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public int saveProjectUpdates(int projectId, int userId, String workDone) {
+		// TODO Auto-generated method stub
+		try {
+	           
+	           
+           st = cn.prepareStatement("INSERT INTO project_updates (project_id, updated_by, work_done) VALUES (?, ?, ?)");
+            st.setInt(1, projectId);
+            st.setInt(2, userId);
+            st.setString(3, workDone);
+            
+            return st.executeUpdate();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+		
+		return 0;
+	}
 
-    @Override
-    public int verify(String name, String username, String mobile, String email, String password) {
-        int uid = 1;
-        try {
-            PreparedStatement st = cn.prepareStatement("SELECT MAX(uid) AS max_uid FROM user");
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                uid = rs.getInt("max_uid") + 1;
-            }
-
-            PreparedStatement stmt = cn.prepareStatement("INSERT INTO user (uid, name, username, mobile, email, password) VALUES (?, ?, ?, ?, ?, ?)");
-            stmt.setInt(1, uid);
-            stmt.setString(2, name);
-            stmt.setString(3, username);
-            stmt.setString(4, mobile);
-            stmt.setString(5, email);
-            stmt.setString(6, password);
-
-            return stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public int logincreditial(String username, String password) {
-        try {
-            PreparedStatement st = cn.prepareStatement("SELECT uid FROM user WHERE username = ? AND password = ?");
-            st.setString(1, username);
-            st.setString(2, password);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("uid");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    @Override
-    public int savetask(String title, String tasktime, String taskDate, String endDate, String userId, String status, String priority) {
-        int tid = 1;
-        try {
-            PreparedStatement st = cn.prepareStatement("SELECT MAX(tid) AS TaskId FROM task");
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                tid = rs.getInt("TaskId") + 1;
-            }
-
-            PreparedStatement stmt = cn.prepareStatement("INSERT INTO task VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            stmt.setInt(1, tid);
-            stmt.setString(2, title);
-            stmt.setString(3, tasktime);
-            stmt.setString(4, taskDate);
-            stmt.setString(5, endDate);
-            stmt.setString(6, userId);
-            stmt.setString(7, status);
-            stmt.setString(8, priority);
-
-            return stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public boolean adminlogin(String username, String password) {
-        try {
-            String query = "SELECT * FROM admin WHERE username = ? AND password = ?";
-            PreparedStatement st = cn.prepareStatement(query);
-            st.setString(1, username);
-            st.setString(2, password);
-            ResultSet result = st.executeQuery();
-            return result.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public ResultSet getDetails() {
-        try {
-            String query = "SELECT * FROM task";
-            st = cn.prepareStatement(query);
-            return st.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-   
-    
-    @Override
-    public int saveproject(String title, String description, int created_by, String deadline) {
-        int projectId = 0;
-        try {
-            // Insert project into the projects table
-            String insertProjectQuery = "INSERT INTO projects (title, description, created_by, deadline) VALUES (?, ?, ?, ?)";
-            PreparedStatement pst = cn.prepareStatement(insertProjectQuery, Statement.RETURN_GENERATED_KEYS);
-            pst.setString(1, title);
-            pst.setString(2, description);
-            pst.setInt(3, created_by);
-            pst.setString(4, deadline);
-
-            int rowsAffected = pst.executeUpdate();
-
-            if (rowsAffected > 0) {
-                ResultSet generatedKeys = pst.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    projectId = generatedKeys.getInt(1); // Get the auto-generated project_id
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return projectId; // Return project ID
-    }
-
-    @Override
-    public int addTeamMember(int projectId, String username, String role) {
-        try {
-            String query = "INSERT INTO project_team (project_id, username, role) VALUES (?, ?, ?)";
-            PreparedStatement st = cn.prepareStatement(query);
-            st.setInt(1, projectId);
-            st.setString(2, username);
-            st.setString(3, role);
-            return st.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-	
-
-	
 }

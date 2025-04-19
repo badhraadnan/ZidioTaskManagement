@@ -62,6 +62,7 @@ public class AddProjectController extends HttpServlet {
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         String deadline = request.getParameter("deadline");
+        String status = request.getParameter("status");
         int created_by = Integer.parseInt(request.getParameter("created_by"));
 
         String[] memberUsernames = {
@@ -80,7 +81,7 @@ public class AddProjectController extends HttpServlet {
         service.DBconnect();
 
         // Save project and retrieve the generated project ID
-        int projectId = service.saveproject(title, description, created_by, deadline);
+        int projectId = service.saveproject(title, description, created_by, deadline, status);
 
         if (projectId > 0) {
             // Add team members to the project_team table
@@ -90,7 +91,7 @@ public class AddProjectController extends HttpServlet {
 
             response.sendRedirect("addproject.jsp?success=1");
         } else {
-            response.sendRedirect("../pages/error.jsp?success=0");
+            response.sendRedirect("addproject.jsp?success=0");
         }
     }
 }

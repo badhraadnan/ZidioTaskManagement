@@ -6,6 +6,13 @@
 <%
 String userName = (String) session.getAttribute("userName");
 %>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-dark">
@@ -61,12 +68,21 @@ String userName = (String) session.getAttribute("userName");
 
 				<li class="nav-item"><a
 					class="nav-link active text-white fs-5 px-3"
-					href="<%=request.getContextPath()%>/project/addproject.jsp">➕
-						Add Project</a></li>
+					href="<%=request.getContextPath()%>/project/addproject.jsp"> <i
+						class="fa-solid fa-square-plus"
+						style="margin-left: 5px; color: black;"></i> Add Project
+				</a></li>
+				<li class="nav-item"><a
+					class="nav-link active text-white fs-5 px-3"
+					href="<%=request.getContextPath()%>/project/projectDetails.jsp"> <i
+						class="fa-solid fa-list-check"
+						style="margin-left: 5px; color: black;"></i> view Project
+				</a></li>
 
 				<li class="nav-item"><a class="nav-link text-white fs-5 px-3"
 					href="<%=request.getContextPath()%>/pages/getdetails.jsp">📋
 						Pending Tasks</a></li>
+
 				<li class="nav-item"><a class="nav-link text-white fs-5 px-3"
 					href="<%=request.getContextPath()%>/pages/completeTask.jsp">✅
 						Completed Tasks</a></li>

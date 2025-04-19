@@ -50,7 +50,7 @@ body {
 					<label class="form-label">Deadline</label> <input type="date"
 						name="deadline" class="form-control" required>
 				</div>
-
+				<input type="hidden" name="status" value="InProgress">
 				<h5 class="mt-4">Team Members</h5>
 
 				<div class="row mb-3">
@@ -60,7 +60,7 @@ body {
 					</div>
 					<div class="col-md-6">
 						<input type="text" name="memberRole0" class="form-control"
-							placeholder="Role" required />
+							placeholder="Role (eg. Front-End)" required />
 					</div>
 				</div>
 
@@ -71,7 +71,7 @@ body {
 					</div>
 					<div class="col-md-6">
 						<input type="text" name="memberRole1" class="form-control"
-							placeholder="Role" required />
+							placeholder="Role (eg. Front-End)" required />
 					</div>
 				</div>
 
@@ -82,7 +82,7 @@ body {
 					</div>
 					<div class="col-md-6">
 						<input type="text" name="memberRole2" class="form-control"
-							placeholder="Role" required />
+							placeholder="Role (eg. Front-End)" required />
 					</div>
 				</div>
 
@@ -92,6 +92,6 @@ body {
 			</form>
 		</div>
 	</main>
-
+	<%@ include file="../HTML/footer.html" %>
 </body>
 </html>

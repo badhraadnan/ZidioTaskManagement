@@ -31,8 +31,12 @@ public interface DAOService {
     
     ResultSet getDetails();
     
-    public int saveproject(String title, String description, int created_by, String deadline);
+    public int saveproject(String title, String description, int created_by, String deadline,String status);
     
     // Add method to insert team members
     public int addTeamMember(int projectId, String username, String role);
+    
+    public ResultSet getProjectDetails(String username);
+    
+    public int saveProjectUpdates(int projectId, int userId, String workDon);
 }
