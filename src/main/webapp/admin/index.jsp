@@ -5,7 +5,7 @@
 <%@ page import="javax.servlet.http.HttpSession" %>
 
 <%
-    String userName = (String) session.getAttribute("userName");
+    
 
     int totalUsers = 0;
     int totalTasks = 0;
@@ -53,57 +53,13 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link rel="stylesheet" href="CSS/admin_style.css">
+   
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand text-white" href="#">
-            <span class="text-danger fw-bold">Zidio</span>
-            <span class="text-white">Task Management</span>
-        </a>
+<%@ include file="header.jsp" %>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Hello, <%= (userName != null) ? userName : "Guest" %></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#contact">Contact</a>
-                </li>
-                <% if (userName != null) { %>
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="../admin/logout.jsp">Logout</a>
-                    </li>
-                <% } %>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav class="col-md-2 bg-primary vh-100 p-3">
-            <ul class="nav flex-column">
-                <li class="nav-item mt-4">
-                    <a class="nav-link active text-white fs-5" href="admin/viewTask.jsp">
-                        <i class="fa-solid fa-list-check text-white"></i> View Task
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white fs-5" href="admin/user.jsp">
-                        <i class="fa-solid fa-people-roof text-white"></i> Manage User
-                    </a>
-                </li>
-            </ul>
-        </nav>
 
         <!-- Main Content -->
         <main class="col-md-9 p-4 bg-white mt-5 text-center">

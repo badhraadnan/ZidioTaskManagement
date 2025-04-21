@@ -64,8 +64,8 @@ int userId = (Integer) session.getAttribute("userId");
 				</div>
 			</div>
 		</div>
-		<div class="d-grid col-md-2 " style="margin-left: 50%;">
-					<a href="projectDetails.jsp"><input type="submit" value="Back" class="btn btn-success"></a>
+		<div class="d-grid col-md-1 " style="margin-left: 50%;">
+					<a href="projectDetails.jsp" class="btn btn-success">⬅ Back</a>
 				</div>
 	</main>
 	<%@ include file="../HTML/footer.html" %>

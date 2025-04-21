@@ -11,7 +11,7 @@
     
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%
-    String userName = (String) session.getAttribute("userName");
+   
 	int userId = (Integer)session.getAttribute("userId");
 	
 %>
@@ -62,65 +62,14 @@
         }
     </style>
 </head>
-<body class="bg-light " style="padding-top: 56px;">
+<body class="bg-light ">
 	
 	<%
 	LocalTime currtime=LocalTime.now();
 	String formatedTime=currtime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 	%>
 	
-<nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
-    <div class="container-fluid">
-        <!-- Logo -->
-        <a class="navbar-brand text-white" href="#">
-        <span class="text-danger fw-bold fst-italic">Z</span><span class="text-white fst-italic">i</span><span class="text-primary fw-light fst-italic">d</span><span class="text-white fst-italic">i</span><span class="text-secondary fst-italic">o</span>
-        <span class="text-danger fw-bold">T</span><span class="text-warning fw-bold">a</span><span class="text-success fw-bold">s</span><span class="text-primary fw-bold">k</span>
-        <span class="text-danger font-monospace">Man</span><span class="text-white font-monospace">agem</span><span class="text-success font-monospace">ent</span>
-        
-        </a>
-
-        <!-- Toggler for mobile view -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Navbar Links -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Hello, <%= (userName != null) ? userName : "Guest" %></a>
-                </li>
-               
-                <% if (userName != null) { %>
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="../logout.jsp">Logout</a>
-                    </li>
-                <% } %>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container-fluid">
-    <div class="row">
-        <!-- Left Sidebar (col-md-3) -->
-        <nav class="col-md-2 bg-primary vh-100 p-3">
-          
-            <ul class="nav flex-column">
-          
-                <li class="nav-item">
-                    <a class="nav-link active text-white" href="addTask.jsp">➕ Add Task</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="getdetails.jsp">📋 Pending Tasks</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="completeTask.jsp">✅ Completed Tasks</a>
-                </li>
-                
-            </ul>
-        </nav>
+<%@ include file="header.jsp" %>
 
         <!-- Main Content (col-md-9) -->
         <main class="col-md-9 p-4 bg-light">

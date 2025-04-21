@@ -22,8 +22,5 @@ df-messenger {
 		src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 	<df-messenger intent="WELCOME" chat-title="Zidio-Assitant"
 		agent-id="9b06bc85-f88b-4510-8032-8f9b2ae4b40b" language-code="en"></df-messenger>
-
-
-
 </body>
 </html>

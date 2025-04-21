@@ -37,20 +37,11 @@
 .card-footer {
 	background-color: #f8f9fa;
 }
-.row-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-height: 2.8em;
-}
-
 </style>
 </head>
 <body>
 
-	<%@ include file="../pages/header.jsp"%>
+	<%@ include file="header.jsp"%>
 	<%@ include file="../Database/dbcon.jsp"%>
 
 	<main class="col-md-9 p-2 container my-3">
@@ -63,10 +54,8 @@
 			ResultSet rs = null;
 			try {
 				ps = cn.prepareStatement(
-				"SELECT p.title, p.description, u.username AS created_by_username,p.status, p.deadline, pt.role, p.project_id "
-						+ "FROM project_team pt " + "JOIN projects p ON pt.project_id = p.project_id "
-						+ "JOIN user u ON p.created_by = u.uid " + "WHERE pt.username = ? ");
-				ps.setString(1, userName);
+				" SELECT p.title, p.description, u.username AS created_by, p.deadline, p.status FROM projects p JOIN user u ON p.created_by = u.uid");
+				
 				rs = ps.executeQuery();
 
 				String[] colors = {"primary", "success", "info", "warning", "danger", "secondary"};
@@ -75,11 +64,10 @@
 				while (rs.next()) {
 					String title = rs.getString("title");
 					String desc = rs.getString("description");
-					String creatorUsername = rs.getString("created_by_username");
+					String creatorUsername = rs.getString("created_by");
 					String status = rs.getString("status");
 					String deadline = rs.getString("deadline");
-					String role = rs.getString("role");
-					int projectId = rs.getInt("project_id");
+					
 
 					String cardColor = colors[colorIndex % colors.length];
 					colorIndex++;
@@ -89,19 +77,14 @@
 			<div class="col-lg-4 col-md-6">
 				<div class="card project-card border-0 shadow-sm">
 					<div class="card-header bg-<%=cardColor%> text-white">
-						<h5 class="mb-0 text-center"><%=title%></h5>
+						<h5 class="mb-0 text-center"><i class="fa-solid fa-pen-to-square"></i>  <%=title%></h5>
 					</div>
 					<div class="card-body bg-light">
-						<p class="mb-2">
-							<span class="badge bg-<%=cardColor%> badge-role"> <i
-								class="fas fa-user-tag me-1"></i> <%=role%>
-							</span>
-						</p>
-						<p class="text-small row-2">
+						
+						<p class="text-small">
 							<i class="fas fa-align-left me-2"></i><strong>Description:</strong>
 							<%=desc%>
 						</p>
-
 						<p class="text-small">
 							<i class="fas fa-user me-2"></i><strong>Created By:</strong>
 							<%=creatorUsername%>
@@ -111,72 +94,12 @@
 							<span class="text-danger fw-semibold"><%=deadline%></span>
 						</p>
 						<p class="text-small">
-							<%-- Show status icon before "Status:" label --%>
-							<%
-							if ("Completed".equalsIgnoreCase(status)) {
-							%>
-							<i class="fas fa-check-circle text-success me-2"></i>
-							<%
-							} else if ("In Progress".equalsIgnoreCase(status)) {
-							%>
-							<i class="fas fa-spinner fa-spin text-warning me-2"></i>
-							<%
-							} else {
-							%>
-							<i class="fas fa-hourglass-start text-secondary me-2"></i>
-							<%
-							}
-							%>
-
 							<strong>Status:</strong> <span
 								class="text-success fw-semibold ms-1"><%=status%></span>
 						</p>
 
 					</div>
-					<div class="card-footer text-center">
-						<!-- View More button is always shown -->
-						<a href="viewProject.jsp?projectId=<%=projectId%>"
-							class="btn btn-outline-primary btn-sm"> <i
-							class="fas fa-eye me-2"></i>View More
-						</a>
-
-						<!-- Edit button shown only if project is InProgress -->
-						<%
-						if ("InProgress".equalsIgnoreCase(status)) {
-						%>
-						<a href="updateProject.jsp?projectId=<%=projectId%>"
-							class="btn btn-outline-success btn-sm"> <i
-							class="fas fa-edit me-2"></i>Edit
-						</a>
-						<%
-						}
-						%>
-
-						<!-- Update button shown only to creator or admin when InProgress -->
-						<%
-						if ((userName.equals(creatorUsername) || userName.equals("admin")) && "InProgress".equalsIgnoreCase(status)) {
-						%>
-						<a href="completeProject.jsp?projectId=<%=projectId%>"
-							class="btn btn-outline-warning btn-sm"> <i
-							class="fas fa-check me-2"></i>
-						</a>
-						<%
-						}
-						%>
-
-						<!-- Delete button shown only to creator or admin when complete -->
-						<%
-						if ((userName.equals(creatorUsername) || userName.equals("admin"))) {
-						%>
-						<a href="deleteProject.jsp?projectId=<%=projectId%>"
-							class="btn btn-outline-danger btn-sm"> <i
-							class="fas fa-trash me-2"></i>
-						</a>
-						<%
-						}
-						%>
-					</div>
-
+					
 				</div>
 			</div>
 
